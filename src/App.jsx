@@ -1,9 +1,11 @@
-import WelcomePage from "./components/WelcomePage";
+// import WelcomePage from "./components/WelcomePage";
+import EmployeeResign from "./components/employee/EmployeeResign";
 import "./App.css";
 function App() {
   return (
     <>
-      <WelcomePage />
+      <EmployeeResign />
+      {/* <WelcomePage /> */}
     </>
   );
 }

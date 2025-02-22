@@ -1,10 +1,54 @@
 import { useState } from "react";
 import "./WelcomePage.css";
 const WelcomePage = () => {
+  const [user, setUser] = useState({
+    username: "",
+    password: "",
+  });
+  const [userRegister, setUserRegister] = useState({
+    username: "",
+    password: "",
+    confirmpassword: "",
+  });
   const [userSelect, setUserSelect] = useState(0);
   const [newEmployee, setNewEmployee] = useState(true);
-  const handlerAdminLogin = () => {};
-  const handlerEmployeeLogin = () => {};
+  const handlerAdminLogin = (e) => {
+    e.preventDefault();
+    console.log(user);
+    setUser({
+      username: "",
+      password: "",
+    });
+  };
+  const handlerEmployeeLogin = (e) => {
+    e.preventDefault();
+    console.log(user);
+    setUser({
+      username: "",
+      password: "",
+    });
+  };
+  const handlerEmployeeRegister = (e) => {
+    e.preventDefault();
+    console.log(userRegister);
+    setUserRegister({
+      username: "",
+      password: "",
+      confirmpassword: "",
+    });
+  };
+  const changeLoginHandler = (e) => {
+    setUser((data) => ({
+      ...data,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const registerHandler = (e) => {
+    setUserRegister((data) => ({
+      ...data,
+      [e.target.name]: e.target.value,
+    }));
+  };
   return (
     <div className="wel-main-container">
       <nav className="wel-nav">
@@ -44,12 +88,20 @@ const WelcomePage = () => {
               <label className="form-label">User Name :</label>
               <input
                 type="text"
+                name="username"
+                required
                 placeholder="user name"
+                value={user.username}
                 className="form-input"
+                onChange={changeLoginHandler}
               />
               <label className="form-label">Password :</label>
               <input
                 type="password"
+                name="password"
+                required
+                value={user.password}
+                onChange={changeLoginHandler}
                 placeholder="password"
                 className="form-input"
               />
@@ -70,13 +122,21 @@ const WelcomePage = () => {
                 <label className="form-label">User Name :</label>
                 <input
                   type="text"
+                  name="username"
+                  required
+                  value={user.username}
                   placeholder="user name"
+                  onChange={changeLoginHandler}
                   className="form-input"
                 />
                 <label className="form-label">Password :</label>
                 <input
                   type="password"
+                  name="password"
+                  required
                   placeholder="password"
+                  value={user.password}
+                  onChange={changeLoginHandler}
                   className="form-input"
                 />
                 <button className="wel-nav-btn form-submit-btn" type="submit">
@@ -99,24 +159,36 @@ const WelcomePage = () => {
             <>
               <h2 className="form-title">Employee Register</h2>
               <form
-                onSubmit={handlerEmployeeLogin}
+                onSubmit={handlerEmployeeRegister}
                 className="admin-login-form"
               >
                 <label className="form-label">User Name :</label>
                 <input
                   type="text"
+                  name="username"
+                  required
+                  onChange={registerHandler}
+                  value={userRegister.username}
                   placeholder="user name"
                   className="form-input"
                 />
                 <label className="form-label">Password :</label>
                 <input
                   type="password"
+                  name="password"
+                  required
+                  value={userRegister.password}
+                  onChange={registerHandler}
                   placeholder="password"
                   className="form-input"
                 />
                 <label className="form-label">Confirm Password :</label>
                 <input
                   type="password"
+                  name="confirmpassword"
+                  required
+                  value={userRegister.confirmpassword}
+                  onChange={registerHandler}
                   placeholder="confirm password"
                   className="form-input"
                 />

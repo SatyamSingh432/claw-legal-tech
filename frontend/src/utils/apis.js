@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = "https://claw-legal-tech.onrender.com";
 
 export const loginUser = async (username, password) => {
   const res = await fetch(`${API_URL}/api/auth/login`, {
@@ -64,8 +64,6 @@ export const concludeResignation = async (
   return res.json();
 };
 
-// get -> exit_responses
-// get -> resignation_status
 export const getResignationStatus = async (token) => {
   const res = await fetch(`${API_URL}/api/user/resignation_status`, {
     method: "GET",

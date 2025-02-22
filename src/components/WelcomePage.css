@@ -75,3 +75,14 @@
   color: #ffffff;
   border: 2px solid black;
 }
+
+.form-employee-text {
+  text-align: center;
+  padding-top: 1rem;
+}
+
+.form-employee-text-span {
+  color: blue;
+  padding-left: 0.5rem;
+  cursor: pointer;
+}

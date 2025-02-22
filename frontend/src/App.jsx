@@ -8,21 +8,31 @@ import { useVerifyToken } from "./hooks/useVerifyToken";
 import "./App.css";
 
 function App() {
-  const { isAdmin, isValid } = useVerifyToken();
+  const { isAdmin, isValid, username } = useVerifyToken();
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
-          element={<WelcomePage isAdmin={isAdmin} isValid={isValid} />}
+          element={
+            <WelcomePage
+              isAdmin={isAdmin}
+              isValid={isValid}
+              username={username}
+            />
+          }
         ></Route>
 
         <Route
           path="/employee"
           element={
             <ProtectedRoute isValid={isValid}>
-              <EmployeeResign isAdmin={isAdmin} isValid={isValid} />
+              <EmployeeResign
+                isAdmin={isAdmin}
+                isValid={isValid}
+                username={username}
+              />
             </ProtectedRoute>
           }
         ></Route>
@@ -31,7 +41,11 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute isValid={isValid}>
-              <AdminMain isAdmin={isAdmin} isValid={isValid} />
+              <AdminMain
+                isAdmin={isAdmin}
+                isValid={isValid}
+                username={username}
+              />
             </ProtectedRoute>
           }
         ></Route>

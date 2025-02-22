@@ -65,3 +65,20 @@ export const concludeResignation = async (
 };
 
 // get -> exit_responses
+// get -> resignation_status
+export const getResignationStatus = async (token) => {
+  const res = await fetch(`${API_URL}/api/user/resignation_status`, {
+    method: "GET",
+    headers: { Authorization: token },
+  });
+  return res.json();
+};
+
+export const submitQuestionnaire = async (responses, token) => {
+  const res = await fetch(`${API_URL}/api/user/responses`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: token },
+    body: JSON.stringify({ responses }),
+  });
+  return res.json();
+};

@@ -2,7 +2,12 @@ import { useState } from "react";
 import "./ViewResignModal.css";
 import { concludeResignation } from "../../utils/apis.js";
 
-const ViewResignModal = ({ isOpen, onClose, employeeData }) => {
+const ViewResignModal = ({
+  isOpen,
+  onClose,
+  employeeData,
+  fetchResignations,
+}) => {
   const token = localStorage.getItem("token");
 
   const [resignDate, setResignDate] = useState(employeeData.lwd);
@@ -10,6 +15,7 @@ const ViewResignModal = ({ isOpen, onClose, employeeData }) => {
 
   const concludeResignationHandler = async (option) => {
     await concludeResignation(employeeData._id, option, resignDate, token);
+    await fetchResignations();
     onClose(false);
   };
 

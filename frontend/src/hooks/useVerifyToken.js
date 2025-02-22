@@ -4,6 +4,7 @@ import { verifyToken } from "../utils/apis.js";
 const useVerifyToken = () => {
   const [isValid, setIsValid] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [username, setUsername] = useState(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -17,6 +18,7 @@ const useVerifyToken = () => {
 
         setIsValid(data.valid);
         setIsAdmin(data.is_admin);
+        setUsername(data.username);
       } catch (err) {
         console.error(err);
         setIsValid(false);
@@ -25,7 +27,7 @@ const useVerifyToken = () => {
     verify();
   }, [token]);
 
-  return { isValid, isAdmin };
+  return { isValid, isAdmin, username };
 };
 
 export { useVerifyToken };

@@ -2,9 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./EmployeeResign.css";
-import { submitResignation } from "../../utils/apis.js";
+import {
+  submitResignation,
+  getResignationStatus,
+  submitQuestionnaire,
+} from "../../utils/apis.js";
 
-const EmployeeResign = ({ isAdmin }) => {
+const QuesOne = "1. Why are you leaving this position?";
+const QuesTwo = "2. Do you think the company supported your career goals?";
+
+const EmployeeResign = ({ isAdmin, username }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -23,7 +30,17 @@ const EmployeeResign = ({ isAdmin }) => {
     ans2: "",
   });
   const [resignForm, setResignForm] = useState(true);
-  console.log(questionnaires);
+
+  const fetchResignationStatus = async () => {
+    const res = await getResignationStatus(token);
+    const isResignationApproved = res.resignation_status === "approved";
+
+    setResignForm(!isResignationApproved);
+  };
+
+  useEffect(() => {
+    fetchResignationStatus();
+  }, []);
 
   const resignDataHandler = async (e) => {
     e.preventDefault();
@@ -32,9 +49,22 @@ const EmployeeResign = ({ isAdmin }) => {
       date: "",
       reason: "",
     });
-    setResignForm(false);
-    const res = await submitResignation(date, reason, token);
-    console.log(res);
+    await submitResignation(date, reason, token);
+  };
+
+  const questionnairesDataHandler = async (e) => {
+    e.preventDefault();
+    const { ans1, ans2 } = questionnaires;
+    setQuestionnaires({
+      ans1: "",
+      ans2: "",
+    });
+
+    const responses = [
+      { questionText: QuesOne, response: ans1 },
+      { questionText: QuesTwo, response: ans2 },
+    ];
+    await submitQuestionnaire(responses, token);
   };
 
   const resignDataChange = (e) => {
@@ -55,7 +85,7 @@ const EmployeeResign = ({ isAdmin }) => {
     <div className="em-resign-container">
       <nav className="em-resign-nav">
         <p className="em-resign-nav-opt">User Name : </p>
-        <p className="em-resign-nav-opt">Satyam</p>
+        <p className="em-resign-nav-opt">{username}</p>
       </nav>
       <main className="em-resign-form-container">
         {resignForm ? (
@@ -90,30 +120,26 @@ const EmployeeResign = ({ isAdmin }) => {
             </p>
           </form>
         ) : (
-          <form className="em-resign-form" onSubmit={questionnairesDataChange}>
+          <form className="em-resign-form" onSubmit={questionnairesDataHandler}>
             <h2>Resign Accepted Fill Questionnaire Form</h2>
-            <label className="em-resign-label">
-              1. Why are you leaving this position?
-            </label>
+            <label className="em-resign-label">{QuesOne}</label>
             <textarea
               className="em-resign-textarea"
               name="ans1"
               required
               id=""
-              value={resignData.ans1}
+              value={questionnaires.ans1}
               placeholder="Enter here..."
-              onChange={resignDataChange}
+              onChange={questionnairesDataChange}
             />
-            <label className="em-resign-label">
-              2. Do you think the company supported your career goals?
-            </label>
+            <label className="em-resign-label">{QuesTwo}</label>
             <textarea
               className="em-resign-textarea"
               name="ans2"
               required
               id=""
-              value={resignData.ans2}
-              onChange={resignDataChange}
+              value={questionnaires.ans2}
+              onChange={questionnairesDataChange}
               placeholder="Enter here..."
             />
             <button className="em-resign-submit" type="submit">

@@ -47,8 +47,12 @@ const WelcomePage = ({ isValid, isAdmin }) => {
   const handlerEmployeeLogin = async (e) => {
     e.preventDefault();
     const { username, password } = user;
+    if (username === "admin") {
+      return;
+    }
     const loggedInUser = await loginUser(username, password);
     if (loggedInUser) {
+      console.log("Navigating....");
       navigate("/employee");
     }
     setUser({

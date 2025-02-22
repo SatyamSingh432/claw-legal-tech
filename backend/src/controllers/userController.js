@@ -1,5 +1,5 @@
 import Resignation from "../models/Resignation.js";
-import Response from "../models/Response.js";
+import ResponseModel from "../models/Response.js";
 
 export const submitResignation = async (req, res) => {
   try {
@@ -56,14 +56,11 @@ export const getResignationStatus = async (req, res) => {
     const resignation = await Resignation.findOne({ employeeId });
 
     if (!resignation) {
-      return res.status(404).json({ message: "No resignation record found" });
+      return res.status(200).json({ message: "No resignation record found" });
     }
 
     res.status(200).json({
-      data: {
-        resignationStatus: resignation.status,
-        lwd: resignation.lwd,
-      },
+      resignation_status: resignation.status,
     });
   } catch (error) {
     console.error("Error checking resignation status:", error);
@@ -75,7 +72,7 @@ export const submitQuestionnaire = async (req, res) => {
   try {
     const { responses } = req.body;
     const employeeId = req.user.id;
-
+    console.log(responses);
     // Validate responses
     if (!Array.isArray(responses) || responses.length === 0) {
       return res
@@ -84,7 +81,7 @@ export const submitQuestionnaire = async (req, res) => {
     }
 
     // Create response entry
-    const responseEntry = new Response({
+    const responseEntry = new ResponseModel({
       employeeId,
       responses,
     });

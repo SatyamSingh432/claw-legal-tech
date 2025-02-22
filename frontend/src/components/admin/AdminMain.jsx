@@ -9,12 +9,6 @@ const AdminMain = ({ isAdmin }) => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isAdmin) {
-      navigate("/employee");
-    }
-  }, [isAdmin]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showResignations, setShowResignations] = useState(true);
@@ -27,6 +21,9 @@ const AdminMain = ({ isAdmin }) => {
   };
 
   useEffect(() => {
+    if (!isAdmin) {
+      navigate("/");
+    }
     setIsLoading(true);
     fetchResignations();
     setIsLoading(false);
@@ -97,6 +94,7 @@ const AdminMain = ({ isAdmin }) => {
       </main>
       {showModal && (
         <ViewResignModal
+          fetchResignations={fetchResignations}
           isOpen={showModal}
           onClose={setShowModal}
           resignData={resignData}

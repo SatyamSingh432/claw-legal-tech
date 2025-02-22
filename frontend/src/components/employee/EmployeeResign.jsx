@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./EmployeeResign.css";
+import { submitResignation } from "../../utils/apis.js";
 
 const EmployeeResign = ({ isAdmin }) => {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,27 +17,40 @@ const EmployeeResign = ({ isAdmin }) => {
   const [resignData, setResignData] = useState({
     date: "",
     reason: "",
+  });
+  const [questionnaires, setQuestionnaires] = useState({
     ans1: "",
     ans2: "",
   });
   const [resignForm, setResignForm] = useState(true);
-  const resignDataHandler = (e) => {
+  console.log(questionnaires);
+
+  const resignDataHandler = async (e) => {
     e.preventDefault();
-    console.log(resignData);
+    const { date, reason } = resignData;
     setResignData({
       date: "",
       reason: "",
-      ans1: "",
-      ans2: "",
     });
     setResignForm(false);
+    const res = await submitResignation(date, reason, token);
+    console.log(res);
   };
+
   const resignDataChange = (e) => {
     setResignData((data) => ({
       ...data,
       [e.target.name]: e.target.value,
     }));
   };
+
+  const questionnairesDataChange = (e) => {
+    setQuestionnaires((data) => ({
+      ...data,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   return (
     <div className="em-resign-container">
       <nav className="em-resign-nav">
@@ -75,7 +90,7 @@ const EmployeeResign = ({ isAdmin }) => {
             </p>
           </form>
         ) : (
-          <form className="em-resign-form" onSubmit={resignDataHandler}>
+          <form className="em-resign-form" onSubmit={questionnairesDataChange}>
             <h2>Resign Accepted Fill Questionnaire Form</h2>
             <label className="em-resign-label">
               1. Why are you leaving this position?

@@ -3,9 +3,9 @@ import Response from "../models/Response.js";
 
 export const getResignations = async (req, res) => {
   try {
-    const resignations = await Resignation.find().select(
-      "_id employeeId lwd status"
-    );
+    const resignations = await Resignation.find()
+      .populate("employeeId", "username")
+      .select(" employeeId lwd status reason");
     res.status(200).json({ data: resignations });
   } catch (error) {
     res

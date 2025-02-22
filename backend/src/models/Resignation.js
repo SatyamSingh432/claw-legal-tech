@@ -12,6 +12,7 @@ const ResignationSchema = new mongoose.Schema({
     enum: ["pending", "approved", "rejected"],
     default: "pending",
   },
+  reason: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 

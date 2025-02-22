@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ViewResignModal from "./ViewResignModal";
+import { getResignations } from "../../utils/apis.js";
 import "./AdminMain.css";
 
 const AdminMain = ({ isAdmin }) => {
+  const token = localStorage.getItem("token");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,41 +15,22 @@ const AdminMain = ({ isAdmin }) => {
     }
   }, [isAdmin]);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showResignations, setShowResignations] = useState(true);
   const [employeeData, setEmployeeData] = useState({});
-  let resignData = [
-    {
-      username: "satyam",
-      id: "1",
-      resigndate: "2024-11-02",
-      reason: "I want to quit",
-    },
-    {
-      username: "rahul",
-      id: "2",
-      resigndate: "2024-12-05",
-      reason: "Personal reasons",
-    },
-    {
-      username: "priya",
-      id: "3",
-      resigndate: "15/01/2025",
-      reason: "Better opportunity",
-    },
-    {
-      username: "ananya",
-      id: "4",
-      resigndate: "22/02/2025",
-      reason: "Relocating to another city",
-    },
-    {
-      username: "rohit",
-      id: "5",
-      resigndate: "10/03/2025",
-      reason: "Health issues",
-    },
-  ];
+  const [resignData, setResignData] = useState([]);
+
+  const fetchResignations = async () => {
+    const res = await getResignations(token);
+    setResignData(res.data);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchResignations();
+    setIsLoading(false);
+  }, []);
 
   return (
     <div className="admin-resign-container">
@@ -82,16 +66,19 @@ const AdminMain = ({ isAdmin }) => {
               <th>S.No</th>
               <th>username</th>
               <th>id</th>
+              <th>status</th>
               <th>view</th>
             </tr>
           </thead>
           <tbody className="admin-resign-body">
+            {isLoading && <div>Loading...</div>}
             {resignData.map((data, index) => {
               return (
-                <tr className="admin-resign-body-row" key={data.id}>
+                <tr className="admin-resign-body-row" key={data._id}>
                   <td>{index + 1}</td>
-                  <td>{data.username}</td>
-                  <td>{data.id}</td>
+                  <td>{data.employeeId.username}</td>
+                  <td>{data.employeeId._id}</td>
+                  <td>{data.status}</td>
                   <td>
                     <button
                       onClick={() => {

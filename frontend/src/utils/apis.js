@@ -32,3 +32,36 @@ export const registerUser = async (username, password) => {
   }
   return { error: true };
 };
+
+export const submitResignation = async (lwd, reason, token) => {
+  const res = await fetch(`${API_URL}/api/user/resign`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: token },
+    body: JSON.stringify({ lwd, reason }),
+  });
+  return res.json();
+};
+
+export const getResignations = async (token) => {
+  const res = await fetch(`${API_URL}/api/admin/resignations`, {
+    method: "GET",
+    headers: { Authorization: token },
+  });
+  return res.json();
+};
+
+export const concludeResignation = async (
+  resignationId,
+  approved,
+  lwd,
+  token
+) => {
+  const res = await fetch(`${API_URL}/api/admin/conclude_resignation`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: token },
+    body: JSON.stringify({ resignationId, approved, lwd }),
+  });
+  return res.json();
+};
+
+// get -> exit_responses

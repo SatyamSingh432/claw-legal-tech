@@ -1,9 +1,18 @@
 import { useState } from "react";
 import "./ViewResignModal.css";
+import { concludeResignation } from "../../utils/apis.js";
+
 const ViewResignModal = ({ isOpen, onClose, employeeData }) => {
-  const [resignDate, setResignDate] = useState(employeeData.resigndate);
+  const token = localStorage.getItem("token");
+
+  const [resignDate, setResignDate] = useState(employeeData.lwd);
   if (!isOpen) return null;
-  console.log(employeeData);
+
+  const concludeResignationHandler = async (option) => {
+    await concludeResignation(employeeData._id, option, resignDate, token);
+    onClose(false);
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -16,11 +25,13 @@ const ViewResignModal = ({ isOpen, onClose, employeeData }) => {
           <h1 className="modal-heading">Resigned Form</h1>
           <label className="resign-modal-label">
             Employee Name :
-            <span className="modal-reason">{employeeData.username}</span>
+            <span className="modal-reason">
+              {employeeData.employeeId.username}
+            </span>
           </label>
           <label className="resign-modal-label">
             Resign Date :
-            <span className="modal-reason">{employeeData.resigndate}</span>
+            <span className="modal-reason">{employeeData.lwd}</span>
           </label>
           <div>
             <label className="resign-modal-label">Reason for Resign :</label>
@@ -40,8 +51,18 @@ const ViewResignModal = ({ isOpen, onClose, employeeData }) => {
             <button className="accept-btn" onClick={() => onClose(false)}>
               Close
             </button>
-            <button className="accept-btn">Reject</button>
-            <button className="accept-btn">Accept</button>
+            <button
+              onClick={() => concludeResignationHandler(false)}
+              className="accept-btn"
+            >
+              Reject
+            </button>
+            <button
+              onClick={() => concludeResignationHandler(true)}
+              className="accept-btn"
+            >
+              Accept
+            </button>
           </div>
         </form>
       </div>

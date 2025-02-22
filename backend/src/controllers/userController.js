@@ -3,7 +3,7 @@ import Response from "../models/Response.js";
 
 export const submitResignation = async (req, res) => {
   try {
-    const { lwd } = req.body;
+    const { lwd, reason } = req.body;
     const employeeId = req.user.id;
 
     // Validate date format
@@ -29,6 +29,7 @@ export const submitResignation = async (req, res) => {
     const resignation = new Resignation({
       employeeId,
       lwd,
+      reason,
     });
 
     await resignation.save();
@@ -44,6 +45,29 @@ export const submitResignation = async (req, res) => {
     res
       .status(500)
       .json({ message: "Server error during resignation submission" });
+  }
+};
+
+export const getResignationStatus = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+
+    // Find the resignation record for the user
+    const resignation = await Resignation.findOne({ employeeId });
+
+    if (!resignation) {
+      return res.status(404).json({ message: "No resignation record found" });
+    }
+
+    res.status(200).json({
+      data: {
+        resignationStatus: resignation.status,
+        lwd: resignation.lwd,
+      },
+    });
+  } catch (error) {
+    console.error("Error checking resignation status:", error);
+    res.status(500).json({ message: "Server error while checking status" });
   }
 };
 

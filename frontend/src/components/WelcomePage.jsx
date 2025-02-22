@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./WelcomePage.css";
+import { loginUser, registerUser } from "../utils/apis.js";
 
 const EMPLOYEE = "EMPLOYEE";
 const ADMIN = "ADMIN";
 
-const WelcomePage = () => {
+const WelcomePage = ({ isValid, isAdmin }) => {
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -16,43 +19,77 @@ const WelcomePage = () => {
   });
   const [userSelect, setUserSelect] = useState(EMPLOYEE);
   const [newEmployee, setNewEmployee] = useState(true);
-  const handlerAdminLogin = (e) => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isValid) return;
+    if (isAdmin) {
+      navigate("/admin");
+    } else {
+      navigate("/employee");
+    }
+  }, [isValid, isAdmin]);
+
+  const handlerAdminLogin = async (e) => {
     e.preventDefault();
-    console.log(user);
+    const { username, password } = user;
+    const loggedInUser = await loginUser(username, password);
+    if (loggedInUser) {
+      navigate("/admin");
+    }
     setUser({
       username: "",
       password: "",
     });
   };
-  const handlerEmployeeLogin = (e) => {
+
+  const handlerEmployeeLogin = async (e) => {
     e.preventDefault();
-    console.log(user);
+    const { username, password } = user;
+    const loggedInUser = await loginUser(username, password);
+    if (loggedInUser) {
+      navigate("/employee");
+    }
     setUser({
       username: "",
       password: "",
     });
   };
-  const handlerEmployeeRegister = (e) => {
+
+  const handlerEmployeeRegister = async (e) => {
     e.preventDefault();
+
     console.log(userRegister);
+    const { username, password, confirmpassword } = userRegister;
+    if (password !== confirmpassword) {
+      return;
+    }
+    const registeredUser = await registerUser(username, password);
+    if (registeredUser) {
+      navigate("/employee");
+    }
     setUserRegister({
       username: "",
       password: "",
       confirmpassword: "",
     });
   };
+
   const changeLoginHandler = (e) => {
     setUser((data) => ({
       ...data,
       [e.target.name]: e.target.value,
     }));
   };
+
   const registerHandler = (e) => {
     setUserRegister((data) => ({
       ...data,
       [e.target.name]: e.target.value,
     }));
   };
+
   return (
     <div className="wel-main-container">
       <nav className="wel-nav">

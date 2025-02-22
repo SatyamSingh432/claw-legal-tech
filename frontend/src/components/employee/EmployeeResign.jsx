@@ -1,6 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./EmployeeResign.css";
-const EmployeeResign = () => {
+
+const EmployeeResign = ({ isAdmin }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAdmin) {
+      navigate("/admin");
+    }
+  }, [isAdmin]);
+
   const [resignData, setResignData] = useState({
     date: "",
     reason: "",

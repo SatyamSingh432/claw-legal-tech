@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState } from "react";
 import "./ViewResignModal.css";
 const ViewResignModal = ({ isOpen, onClose, employeeData }) => {

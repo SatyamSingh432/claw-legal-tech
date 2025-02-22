@@ -1,7 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ViewResignModal from "./ViewResignModal";
 import "./AdminMain.css";
-const AdminMain = () => {
+
+const AdminMain = ({ isAdmin }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate("/employee");
+    }
+  }, [isAdmin]);
+
   const [showModal, setShowModal] = useState(false);
   const [showResignations, setShowResignations] = useState(true);
   const [employeeData, setEmployeeData] = useState({});

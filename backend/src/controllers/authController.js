@@ -24,7 +24,21 @@ export const registerUser = async (req, res) => {
     });
 
     await user.save();
-    res.status(201).json({ message: "User registered successfully" });
+
+    // Generate token
+    const token = jwt.sign(
+      { id: user._id, username: user.username, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+    const isAdmin = user.role === "admin";
+
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      is_admin: isAdmin,
+      username,
+    });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ message: "Server error during registration" });
@@ -55,7 +69,7 @@ export const loginUser = async (req, res) => {
     );
     const isAdmin = user.role === "admin";
 
-    res.status(200).json({ token, is_admin: isAdmin });
+    res.status(200).json({ token, is_admin: isAdmin, username });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error during login" });
@@ -69,7 +83,14 @@ export const verifyUser = async (req, res) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    res.json({ valid: true, userId: verified.id });
+    const isAdmin = verified.role === "admin";
+
+    res.json({
+      valid: true,
+      userId: verified.id,
+      is_admin: isAdmin,
+      username: verified.username,
+    });
   } catch (err) {
     res.status(401).json({ valid: false, message: "Invalid token" });
   }

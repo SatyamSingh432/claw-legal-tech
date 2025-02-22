@@ -1,17 +1,21 @@
 import { useState } from "react";
+import ViewResignModal from "./ViewResignModal";
 import "./AdminMain.css";
 const AdminMain = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [showResignations, setShowResignations] = useState(true);
+  const [employeeData, setEmployeeData] = useState({});
   let resignData = [
     {
       username: "satyam",
       id: "1",
-      resigndate: "02/11/2024",
+      resigndate: "2024-11-02",
       reason: "I want to quit",
     },
     {
       username: "rahul",
       id: "2",
-      resigndate: "05/12/2024",
+      resigndate: "2024-12-05",
       reason: "Personal reasons",
     },
     {
@@ -33,11 +37,30 @@ const AdminMain = () => {
       reason: "Health issues",
     },
   ];
+
   return (
     <div className="admin-resign-container">
       <nav className="em-resign-nav">
-        <button className="wel-nav-btn">Resignations</button>
-        <button className="wel-nav-btn">Questionnaire</button>
+        <button
+          className={
+            showResignations ? "wel-nav-btn wel-nav-btn-active" : "wel-nav-btn"
+          }
+          onClick={() => {
+            setShowResignations(true);
+          }}
+        >
+          Resignations
+        </button>
+        <button
+          className={
+            showResignations ? "wel-nav-btn " : "wel-nav-btn wel-nav-btn-active"
+          }
+          onClick={() => {
+            setShowResignations(false);
+          }}
+        >
+          Questionnaire
+        </button>
         <p className="em-resign-nav-opt">User Name : </p>
         <p className="em-resign-nav-opt">Admin</p>
       </nav>
@@ -60,7 +83,14 @@ const AdminMain = () => {
                   <td>{data.username}</td>
                   <td>{data.id}</td>
                   <td>
-                    <button>view</button>
+                    <button
+                      onClick={() => {
+                        setEmployeeData(data);
+                        setShowModal(true);
+                      }}
+                    >
+                      view
+                    </button>
                   </td>
                 </tr>
               );
@@ -68,6 +98,14 @@ const AdminMain = () => {
           </tbody>
         </table>
       </main>
+      {showModal && (
+        <ViewResignModal
+          isOpen={showModal}
+          onClose={setShowModal}
+          resignData={resignData}
+          employeeData={employeeData}
+        />
+      )}
     </div>
   );
 };

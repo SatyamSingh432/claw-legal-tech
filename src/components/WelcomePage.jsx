@@ -1,5 +1,9 @@
 import { useState } from "react";
 import "./WelcomePage.css";
+
+const EMPLOYEE = "EMPLOYEE";
+const ADMIN = "ADMIN";
+
 const WelcomePage = () => {
   const [user, setUser] = useState({
     username: "",
@@ -10,7 +14,7 @@ const WelcomePage = () => {
     password: "",
     confirmpassword: "",
   });
-  const [userSelect, setUserSelect] = useState(0);
+  const [userSelect, setUserSelect] = useState(EMPLOYEE);
   const [newEmployee, setNewEmployee] = useState(true);
   const handlerAdminLogin = (e) => {
     e.preventDefault();
@@ -56,24 +60,24 @@ const WelcomePage = () => {
           <p className="wel-nav-label">Login as :</p>
           <button
             className={
-              userSelect === 1
+              userSelect === ADMIN
                 ? "wel-nav-btn wel-nav-btn-active"
                 : "wel-nav-btn"
             }
             onClick={() => {
-              setUserSelect(1);
+              setUserSelect(ADMIN);
             }}
           >
             Admin
           </button>
           <button
             className={
-              userSelect === 2
+              userSelect === EMPLOYEE
                 ? "wel-nav-btn wel-nav-btn-active"
                 : "wel-nav-btn "
             }
             onClick={() => {
-              setUserSelect(2);
+              setUserSelect(EMPLOYEE);
             }}
           >
             Employee
@@ -81,7 +85,7 @@ const WelcomePage = () => {
         </div>
       </nav>
       <main className="wel-form-container">
-        {userSelect === 1 && (
+        {userSelect === ADMIN && (
           <>
             <h2 className="form-title">Admin Login</h2>
             <form onSubmit={handlerAdminLogin} className="admin-login-form">
@@ -111,7 +115,7 @@ const WelcomePage = () => {
             </form>
           </>
         )}
-        {userSelect === 2 &&
+        {userSelect === EMPLOYEE &&
           (newEmployee ? (
             <>
               <h2 className="form-title">Employee Login</h2>

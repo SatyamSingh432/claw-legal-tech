@@ -1,22 +1,24 @@
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useVerifyToken } from "../hooks/useVerifyToken.js";
 import "./ProtectedRoute.css";
 
 const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
   const { isValid, isAdmin } = useVerifyToken();
 
   if (isValid === null) {
     return <div className="loading">Loading...</div>;
   }
+
   if (isAdmin) {
-    <Navigate to="/admin" />;
+    navigate("/admin");
   }
   if (!isAdmin) {
-    <Navigate to="/employee" />;
+    navigate("/employee");
   }
 
-  return isValid ? children : <Navigate to="/" />;
+  return isValid ? children : navigate("/");
 };
 
 export { ProtectedRoute };
